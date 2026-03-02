@@ -1,0 +1,211 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{titlesec}
+
+\geometry{margin=1in}
+
+% Blue section headings
+\titleformat{\section}
+{\color{blue}\normalfont\Large\bfseries}
+{\thesection}{1em}{}
+
+\begin{document}
+
+% Header
+\begin{minipage}{0.3\textwidth}
+    \includegraphics[width=\linewidth]{LOGO.PNG}
+\end{minipage}
+\begin{minipage}{0.8\textwidth}
+    \hfill
+    \begin{tabular}{rl}
+        \textbf{Name:} & Pavan Kumar KS \\
+        \textbf{ID:} & COMETFWC044 \\
+        \textbf{Date:} & 23 Feb 2026 \\
+    \end{tabular}
+\end{minipage}
+
+\vspace{1cm}
+
+%------------------------------------------------
+\section*{QUESTION}
+
+A 4:1 Multiplexer has select lines P and Q.  
+The inputs are given as:
+
+\[
+I_0 = R,\quad
+I_1 = \bar{R},\quad
+I_2 = \bar{R},\quad
+I_3 = R
+\]
+
+Find the Boolean expression for the output function F.
+
+%------------------------------------------------
+\section*{QUESTION ANALYSIS}
+
+For a 4:1 MUX,
+
+\[
+F = I_0\bar{P}\bar{Q} + I_1\bar{P}Q + I_2P\bar{Q} + I_3PQ
+\]
+
+Substituting the inputs:
+
+\[
+F = R\bar{P}\bar{Q} + \bar{R}\bar{P}Q + \bar{R}P\bar{Q} + RPQ
+\]
+
+Grouping terms:
+
+\[
+F = R(\bar{P}\bar{Q} + PQ) + \bar{R}(\bar{P}Q + P\bar{Q})
+\]
+
+\[
+F = R(P \oplus Q)' + \bar{R}(P \oplus Q)
+\]
+
+\[
+\boxed{F = P \oplus Q \oplus R}
+\]
+
+%------------------------------------------------
+\section*{TRUTH TABLE}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+P & Q & R & F = P $\oplus$ Q $\oplus$ R \\
+\hline
+0 & 0 & 0 & 0 \\
+0 & 0 & 1 & 1 \\
+0 & 1 & 0 & 1 \\
+0 & 1 & 1 & 0 \\
+1 & 0 & 0 & 1 \\
+1 & 0 & 1 & 0 \\
+1 & 1 & 0 & 0 \\
+1 & 1 & 1 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+%------------------------------------------------
+\section*{HARDWARE IMPLEMENTATION}
+
+The expression is implemented using:
+Arduino UNO + 7447 BCD to 7-segment driver + Common Anode 7-segment display.
+
+%------------------------------------------------
+\section*{COMPONENTS REQUIRED}
+
+\begin{center}
+\begin{tabular}{|l|c|}
+\hline
+Component & Quantity \\
+\hline
+Arduino UNO & 1 \\
+7447 IC & 1 \\
+Common Anode 7-Segment Display & 1 \\
+220$\Omega$ Resistors & 7 \\
+Breadboard & 1 \\
+Jumper Wires & As required \\
+\hline
+\end{tabular}
+\end{center}
+
+%------------------------------------------------
+\section*{PIN CONNECTIONS}
+
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+Connection & Details \\
+\hline
+Arduino D2 & Input P \\
+Arduino D3 & Input Q \\
+Arduino D4 & Input R \\
+Arduino D8 & 7447 Pin 7 (A) \\
+Arduino D9 & 7447 Pin 1 (B) \\
+Arduino D10 & 7447 Pin 2 (C) \\
+Arduino D11 & 7447 Pin 6 (D) \\
+7447 Pin 16 & +5V \\
+7447 Pin 8 & GND \\
+7447 Outputs (a-g) & To 7-segment via 220$\Omega$ resistors \\
+Common Anode & +5V \\
+\hline
+\end{tabular}
+\end{center}
+
+%------------------------------------------------
+\section*{LOGIC DESCRIPTION}
+
+The Arduino reads inputs P, Q and R.  
+It computes the XOR operation:
+
+\[
+F = P \oplus Q \oplus R
+\]
+
+The output F is sent as BCD input to the 7447 IC.  
+The 7447 decodes the BCD value and drives the 7-segment display.  
+
+If the number of HIGH inputs is odd → display shows 1.  
+If the number of HIGH inputs is even → display shows 0.
+
+%------------------------------------------------
+\section*{CODE UPLOADING STEPS}
+
+\begin{enumerate}
+\item Create a blink folder and write Makefile
+\item Write the code in main.c
+\item Run the command ``make''. It will compile the code and create hex file
+\item Copy the .hex file to ArduinoDroid folder
+\item Connect the Arduino UNO to mobile with OTG cable
+\item Upload the hex file using ``Upload Precompiled'' option
+\item Observe the output and verify the expression
+\end{enumerate}
+
+%------------------------------------------------
+\section*{EXPERIMENTAL TRUTH TABLE}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+P & Q & R & Observed Output (F) \\
+\hline
+0 & 0 & 0 & 0 \\
+0 & 0 & 1 & 1 \\
+0 & 1 & 0 & 1 \\
+0 & 1 & 1 & 0 \\
+1 & 0 & 0 & 1 \\
+1 & 0 & 1 & 0 \\
+1 & 1 & 0 & 0 \\
+1 & 1 & 1 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+%------------------------------------------------
+\section*{CIRCUIT CONNECTION}
+
+\begin{center}
+\includegraphics[width=0.8\textwidth]{pic.jpg}
+\end{center}
+
+%------------------------------------------------
+\section*{CONCLUSION}
+
+The given 4:1 multiplexer configuration simplifies to the XOR expression:
+
+\[
+F = P \oplus Q \oplus R
+\]
+
+The hardware implementation using Arduino and 7447 successfully verifies the Boolean expression through the 7-segment display output.
+
+\end{document}
